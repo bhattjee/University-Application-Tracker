@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniTrack — Application Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── RESET & ROOT ───────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-deep:       #050810;
+      --bg-base:       #0a0d18;
+      --bg-card:       #0f1326;
+      --bg-elevated:   #151b32;
+      --bg-hover:      #1a2240;
+      --border:        #1e2a4a;
+      --border-bright: #2a3d6e;
+      --blue-core:     #1e56d9;
+      --blue-vivid:    #2b6fff;
+      --blue-glow:     #3d84ff;
+      --blue-dim:      #0f2f80;
+      --blue-subtle:   #0a1e52;
+      --text-primary:  #e8edf5;
+      --text-secondary:#8a9bbf;
+      --text-muted:    #4a5a7a;
+      --text-accent:   #5b9aff;
+      --white:         #ffffff;
+      --danger:        #d94040;
+      --danger-dim:    #7a1a1a;
+      --success:       #2eb87a;
+      --warning:       #e8a020;
+      --status-notopened: #4a5a7a;
+      --status-inprogress: #1e56d9;
+      --status-submitted: #2eb87a;
+      --status-accepted: #2eb87a;
+      --status-rejected: #d94040;
+      --status-expired: #7a1a1a;
+      --status-withdrawn: #8a6a2a;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --shadow-card: 0 4px 24px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.03) inset;
+      --shadow-glow: 0 0 30px rgba(30,86,217,0.25);
+      --transition: 0.18s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── HEADER ─────────────────────────────────────── */
+    .header {
+      background: var(--bg-base);
+      border-bottom: 1px solid var(--border);
+      padding: 0 28px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--blue-core), var(--blue-glow));
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 0 16px rgba(30,86,217,0.4);
+    }
+
+    .logo-text {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--white);
+    }
+
+    .logo-text span { color: var(--blue-glow); }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .conn-badge {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 500;
+      color: var(--text-secondary);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 12px;
+      transition: var(--transition);
+    }
+
+    .conn-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      transition: var(--transition);
+    }
+
+    .conn-badge.connected .conn-dot { background: var(--success); box-shadow: 0 0 6px var(--success); }
+    .conn-badge.connected { color: var(--text-primary); border-color: rgba(46,184,122,0.3); }
+    .conn-badge.error .conn-dot { background: var(--danger); }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 7px; padding: 8px 18px;
+      border: none; border-radius: var(--radius-sm);
+      font-family: 'Roboto', sans-serif;
+      font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue-core), var(--blue-glow));
+      color: var(--white);
+      box-shadow: 0 2px 12px rgba(30,86,217,0.35);
+    }
+    .btn-primary:hover { box-shadow: 0 4px 20px rgba(43,111,255,0.5); transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { background: var(--bg-elevated); color: var(--text-primary); border-color: var(--border-bright); }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid var(--danger-dim);
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+    .btn-danger:hover { background: var(--danger-dim); color: #ff8080; }
+
+    .btn-icon {
+      width: 30px; height: 30px;
+      padding: 0;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ─── CONTROLS BAR ───────────────────────────────── */
+    .controls-bar {
+      padding: 18px 28px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-base);
+    }
+
+    .controls-left { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; flex: 1; }
+    .controls-right { display: flex; gap: 10px; align-items: center; }
+
+    .filter-group {
+      display: flex;
+      gap: 1px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    .filter-btn {
+      padding: 7px 14px;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-family: 'Roboto', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .filter-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .filter-btn.active { background: var(--blue-subtle); color: var(--blue-glow); }
+
+    .select-pill {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: 'Roboto', sans-serif;
+      font-size: 12px;
+      padding: 7px 12px;
+      cursor: pointer;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238a9bbf'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 28px;
+      transition: var(--transition);
+    }
+    .select-pill:focus { border-color: var(--blue-core); }
+
+    /* ─── TOAST ───────────────────────────────────────── */
+    .toast-container {
+      position: fixed;
+      top: 80px; right: 24px;
+      z-index: 9999;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+
+    .toast {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 18px;
+      font-size: 13px;
+      color: var(--text-primary);
+      display: flex; align-items: center; gap: 10px;
+      box-shadow: var(--shadow-card);
+      animation: slideIn 0.25s ease;
+      min-width: 240px;
+      max-width: 360px;
+    }
+
+    .toast.success { border-color: rgba(46,184,122,0.4); }
+    .toast.error   { border-color: rgba(217,64,64,0.4); }
+    .toast.info    { border-color: rgba(30,86,217,0.4); }
+
+    @keyframes slideIn {
+      from { transform: translateX(40px); opacity: 0; }
+      to   { transform: translateX(0);    opacity: 1; }
+    }
+
+    /* ─── MAIN LAYOUT ─────────────────────────────────── */
+    .main {
+      padding: 28px;
+      max-width: 100%;
+    }
+
+    /* ─── COUNTRY SECTION ─────────────────────────────── */
+    .country-section {
+      margin-bottom: 40px;
+    }
+
+    .country-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .country-flag {
+      font-size: 28px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    }
+
+    .country-title {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: var(--white);
+    }
+
+    .country-count {
+      background: var(--blue-subtle);
+      color: var(--blue-glow);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--blue-dim);
+    }
+
+    .country-divider {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, var(--border-bright), transparent);
+    }
+
+    /* ─── TABLE WRAPPER ──────────────────────────────── */
+    .table-wrapper {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+
+    .table-scroll { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead {
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border-bright);
+    }
+
+    th {
+      padding: 12px 14px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      user-select: none;
+      position: relative;
+    }
+
+    th.resizable {
+      resize: horizontal;
+      overflow: hidden;
+      min-width: 60px;
+    }
+
+    th .th-inner {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background var(--transition);
+      cursor: grab;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--bg-hover); }
+    tbody tr.dragging { opacity: 0.4; }
+    tbody tr.drag-over { background: var(--blue-subtle); border-color: var(--blue-core); }
+
+    td {
+      padding: 12px 14px;
+      vertical-align: top;
+      color: var(--text-primary);
+    }
+
+    td.editable {
+      cursor: pointer;
+    }
+
+    td.editable:hover .edit-hint {
+      opacity: 1;
+    }
+
+    .edit-hint {
+      opacity: 0;
+      transition: var(--transition);
+      color: var(--text-muted);
+      font-size: 10px;
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* ─── INLINE EDIT INPUTS ─────────────────────────── */
+    .cell-edit-input {
+      background: var(--bg-base);
+      border: 1px solid var(--blue-core);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: 'Roboto', sans-serif;
+      font-size: 13px;
+      padding: 5px 8px;
+      width: 100%;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(30,86,217,0.2);
+    }
+
+    .cell-edit-input:focus { border-color: var(--blue-glow); }
+
+    .cell-select {
+      background: var(--bg-base);
+      border: 1px solid var(--blue-core);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: 'Roboto', sans-serif;
+      font-size: 13px;
+      padding: 5px 8px;
+      width: 100%;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .cell-textarea {
+      background: var(--bg-base);
+      border: 1px solid var(--blue-core);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: 'Roboto', sans-serif;
+      font-size: 12px;
+      padding: 6px 8px;
+      width: 100%;
+      min-height: 80px;
+      resize: vertical;
+      outline: none;
+      line-height: 1.5;
+    }
+
+    /* ─── STATUS BADGE ───────────────────────────────── */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+    .status-badge.not-opened  { background: rgba(74,90,122,0.2); color: #8a9bbf; border: 1px solid rgba(74,90,122,0.3); }
+    .status-badge.in-progress { background: rgba(30,86,217,0.15); color: #5b9aff; border: 1px solid rgba(30,86,217,0.3); }
+    .status-badge.submitted   { background: rgba(46,184,122,0.12); color: #4ddba0; border: 1px solid rgba(46,184,122,0.3); }
+    .status-badge.accepted    { background: rgba(46,184,122,0.2); color: #2eb87a; border: 1px solid rgba(46,184,122,0.4); }
+    .status-badge.rejected    { background: rgba(217,64,64,0.15); color: #ff6b6b; border: 1px solid rgba(217,64,64,0.3); }
+    .status-badge.expired     { background: rgba(122,26,26,0.2); color: #a05050; border: 1px solid rgba(122,26,26,0.4); }
+    .status-badge.withdrawn   { background: rgba(138,106,42,0.15); color: #c8922a; border: 1px solid rgba(138,106,42,0.3); }
+
+    .status-dot.not-opened  { background: #8a9bbf; }
+    .status-dot.in-progress { background: #5b9aff; box-shadow: 0 0 4px #5b9aff; }
+    .status-dot.submitted   { background: #4ddba0; box-shadow: 0 0 4px #4ddba0; }
+    .status-dot.accepted    { background: #2eb87a; box-shadow: 0 0 4px #2eb87a; }
+    .status-dot.rejected    { background: #ff6b6b; }
+    .status-dot.expired     { background: #a05050; }
+    .status-dot.withdrawn   { background: #c8922a; }
+
+    /* ─── FEE BADGE ──────────────────────────────────── */
+    .fee-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: 'Roboto Mono', monospace;
+    }
+
+    .fee-paid { color: var(--warning); }
+    .fee-free { color: var(--success); }
+
+    /* ─── ASSIST BADGE ───────────────────────────────── */
+    .assist-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .assist-yes { background: rgba(30,86,217,0.15); color: var(--blue-glow); border: 1px solid rgba(30,86,217,0.3); }
+    .assist-no  { background: rgba(74,90,122,0.15); color: var(--text-muted); border: 1px solid rgba(74,90,122,0.2); }
+
+    /* ─── LINK CELL ──────────────────────────────────── */
+    .link-cell a {
+      color: var(--text-accent);
+      text-decoration: none;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: var(--transition);
+    }
+
+    .link-cell a:hover { color: var(--blue-glow); text-decoration: underline; }
+
+    .link-cell .no-link { color: var(--text-muted); font-size: 11px; font-style: italic; }
+
+    /* ─── STEPS CELL ─────────────────────────────────── */
+    .steps-cell {
+      max-width: 220px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .steps-cell p { margin-bottom: 4px; }
+
+    /* ─── DRAG HANDLE ────────────────────────────────── */
+    .drag-handle {
+      color: var(--text-muted);
+      cursor: grab;
+      padding: 0 4px;
+      font-size: 16px;
+      user-select: none;
+      line-height: 1;
+    }
+
+    .drag-handle:hover { color: var(--text-secondary); }
+
+    /* ─── EMPTY STATE ────────────────────────────────── */
+    .empty-state {
+      padding: 48px 24px;
+      text-align: center;
+    }
+
+    .empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+    .empty-title { font-size: 16px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
+    .empty-sub { font-size: 13px; color: var(--text-muted); }
+
+    /* ─── FAB ────────────────────────────────────────── */
+    .fab {
+      position: fixed;
+      bottom: 32px; right: 32px;
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue-core), var(--blue-glow));
+      color: var(--white);
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 24px rgba(30,86,217,0.5), 0 2px 8px rgba(0,0,0,0.4);
+      transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 200;
+    }
+
+    .fab:hover { transform: scale(1.12) rotate(90deg); box-shadow: 0 10px 36px rgba(43,111,255,0.6); }
+
+    /* ─── MODAL ──────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(6px);
+      z-index: 500;
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.22s ease;
+    }
+
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6), var(--shadow-glow);
+      width: 100%;
+      max-width: 680px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: scale(0.95) translateY(16px);
+      transition: transform 0.22s cubic-bezier(0.34, 1.2, 0.64, 1);
+    }
+
+    .modal-overlay.open .modal { transform: scale(1) translateY(0); }
+
+    .modal-header {
+      padding: 22px 26px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .modal-title { font-size: 18px; font-weight: 700; color: var(--white); }
+    .modal-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    .modal-close {
+      width: 32px; height: 32px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: var(--transition);
+    }
+    .modal-close:hover { background: var(--danger-dim); color: var(--danger); border-color: var(--danger-dim); }
+
+    .modal-body {
+      padding: 24px 26px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .modal-body .full { grid-column: 1 / -1; }
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+
+    .form-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+    }
+
+    .form-input, .form-select, .form-textarea {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: 'Roboto', sans-serif;
+      font-size: 13px;
+      padding: 9px 12px;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--blue-core);
+      box-shadow: 0 0 0 3px rgba(30,86,217,0.15);
+    }
+
+    .form-select {
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238a9bbf'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 10px center;
+      padding-right: 28px; cursor: pointer;
+    }
+
+    .form-textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+
+    .toggle-group {
+      display: flex; align-items: center;
+      gap: 12px;
+      padding: 9px 12px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+
+    .toggle-label { font-size: 13px; color: var(--text-secondary); flex: 1; }
+
+    .toggle {
+      width: 40px; height: 22px;
+      border-radius: 11px;
+      background: var(--bg-base);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      top: 2px; left: 2px;
+      transition: var(--transition);
+    }
+
+    .toggle.on { background: var(--blue-subtle); border-color: var(--blue-core); }
+    .toggle.on::after { left: 20px; background: var(--blue-glow); box-shadow: 0 0 6px var(--blue-glow); }
+
+    .modal-footer {
+      padding: 18px 26px;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* ─── CONFIRM DIALOG ─────────────────────────────── */
+    .confirm-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(4px);
+      z-index: 600;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.18s ease;
+    }
+    .confirm-overlay.open { opacity: 1; pointer-events: all; }
+
+    .confirm-box {
+      background: var(--bg-card);
+      border: 1px solid var(--danger-dim);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 16px 60px rgba(0,0,0,0.6);
+    }
+
+    .confirm-icon { font-size: 36px; margin-bottom: 14px; }
+    .confirm-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--white); }
+    .confirm-msg { font-size: 13px; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.5; }
+    .confirm-actions { display: flex; gap: 10px; justify-content: center; }
+
+    .btn-confirm-delete {
+      background: var(--danger);
+      color: var(--white);
+      padding: 9px 22px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'Roboto', sans-serif;
+      font-size: 13px; font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .btn-confirm-delete:hover { background: #ff4a4a; }
+
+    /* ─── LOADING ─────────────────────────────────────── */
+    .loader {
+      display: flex; align-items: center; justify-content: center;
+      padding: 60px;
+      gap: 12px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .spinner {
+      width: 20px; height: 20px;
+      border: 2px solid var(--border);
+      border-top-color: var(--blue-glow);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── STATS BAR ───────────────────────────────────── */
+    .stats-bar {
+      display: flex;
+      gap: 12px;
+      padding: 18px 28px;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      min-width: 120px;
+      flex-shrink: 0;
+      transition: var(--transition);
+    }
+    .stat-card:hover { border-color: var(--border-bright); }
+
+    .stat-value { font-size: 24px; font-weight: 700; color: var(--white); line-height: 1; }
+    .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 4px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.6px; }
+
+    .stat-card.blue .stat-value { color: var(--blue-glow); }
+    .stat-card.green .stat-value { color: var(--success); }
+    .stat-card.red .stat-value { color: var(--danger); }
+    .stat-card.yellow .stat-value { color: var(--warning); }
+
+    /* ─── SCROLLBAR ──────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-base); }
+    ::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--blue-dim); }
+
+    /* ─── UTILS ──────────────────────────────────────── */
+    .tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .tag-public  { background: rgba(30,86,217,0.15); color: #5b9aff; }
+    .tag-private { background: rgba(138,106,42,0.2); color: #c8922a; }
+    .tag-tech    { background: rgba(46,184,122,0.12); color: #4ddba0; }
+    .tag-applied { background: rgba(74,90,122,0.15); color: var(--text-secondary); }
+
+    .date-cell { font-family: 'Roboto Mono', monospace; font-size: 12px; color: var(--text-secondary); }
+    .date-expired { color: var(--danger); }
+    .date-soon { color: var(--warning); }
+
+    @media (max-width: 768px) {
+      .header { padding: 0 16px; }
+      .controls-bar, .main, .stats-bar { padding-left: 16px; padding-right: 16px; }
+      .modal-body { grid-template-columns: 1fr; }
+      .modal-body .full { grid-column: 1; }
+    }
+
+    /* ─── STEPS TRUNCATED CELL ───────────────────────── */
+.steps-preview-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  max-width: 180px;
+  cursor: pointer;
+}
+
+.steps-view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--blue-glow);
+  background: var(--blue-subtle);
+  border: 1px solid var(--blue-dim);
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+.steps-view-btn:hover { background: var(--blue-dim); }
+
+/* ─── STEPS FULL PREVIEW MODAL ───────────────────── */
+.steps-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(6px);
+  z-index: 700;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.steps-modal-overlay.open { opacity: 1; pointer-events: all; }
+
+.steps-modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+  width: 100%;
+  max-width: 520px;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  transform: scale(0.95) translateY(12px);
+  transition: transform 0.2s cubic-bezier(0.34,1.2,0.64,1);
+}
+.steps-modal-overlay.open .steps-modal { transform: scale(1) translateY(0); }
+
+.steps-modal-header {
+  padding: 18px 22px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 12px;
+}
+.steps-modal-uni { font-size: 15px; font-weight: 700; color: var(--white); }
+.steps-modal-course { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+.steps-modal-body {
+  padding: 20px 22px;
+  overflow-y: auto;
+  flex: 1;
+}
+.steps-modal-content {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.steps-modal-footer {
+  padding: 14px 22px;
+  border-top: 1px solid var(--border);
+  display: flex; justify-content: flex-end; gap: 10px;
+}
+  </style>
+</head>
+<body>
+
+<!-- ─── TOAST ─────────────────────────────────────────── -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ─── HEADER ────────────────────────────────────────── -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon">🎓</div>
+    <div class="logo-text">Uni<span>Track</span></div>
+  </div>
+  <div class="header-right">
+    <div class="conn-badge" id="connBadge">
+      <span class="conn-dot"></span>
+      <span id="connText">Connecting…</span>
+    </div>
+    <button class="btn btn-ghost" onclick="loadApplications()">↺ Refresh</button>
+    <button class="btn btn-primary" onclick="saveAll()">💾 Save All</button>
+  </div>
+</header>
+
+<!-- ─── STATS BAR ─────────────────────────────────────── -->
+<div class="stats-bar" id="statsBar">
+  <div class="stat-card"><div class="stat-value" id="statTotal">—</div><div class="stat-label">Total</div></div>
+  <div class="stat-card blue"><div class="stat-value" id="statInProgress">—</div><div class="stat-label">In Progress</div></div>
+  <div class="stat-card green"><div class="stat-value" id="statSubmitted">—</div><div class="stat-label">Submitted</div></div>
+  <div class="stat-card green"><div class="stat-value" id="statAccepted">—</div><div class="stat-label">Accepted</div></div>
+  <div class="stat-card red"><div class="stat-value" id="statRejected">—</div><div class="stat-label">Rejected</div></div>
+  <div class="stat-card yellow"><div class="stat-value" id="statFee">—</div><div class="stat-label">Total Fees</div></div>
+</div>
+
+<!-- ─── CONTROLS BAR ──────────────────────────────────── -->
+<div class="controls-bar">
+  <div class="controls-left">
+    <!-- Status filter -->
+    <div class="filter-group" id="statusFilter">
+      <button class="filter-btn active" data-status="all" onclick="setFilter('status','all',this)">All Status</button>
+      <button class="filter-btn" data-status="Not Opened" onclick="setFilter('status','Not Opened',this)">Not Opened</button>
+      <button class="filter-btn" data-status="In Progress" onclick="setFilter('status','In Progress',this)">In Progress</button>
+      <button class="filter-btn" data-status="Submitted" onclick="setFilter('status','Submitted',this)">Submitted</button>
+      <button class="filter-btn" data-status="Accepted" onclick="setFilter('status','Accepted',this)">Accepted</button>
+      <button class="filter-btn" data-status="Rejected" onclick="setFilter('status','Rejected',this)">Rejected</button>
+      <button class="filter-btn" data-status="Expired" onclick="setFilter('status','Expired',this)">Expired</button>
+    </div>
+
+    <!-- Uni-Assist filter -->
+    <div class="filter-group" id="assistFilter">
+      <button class="filter-btn active" data-assist="all" onclick="setFilter('assist','all',this)">All</button>
+      <button class="filter-btn" data-assist="true" onclick="setFilter('assist','true',this)">Uni-Assist Only</button>
+      <button class="filter-btn" data-assist="false" onclick="setFilter('assist','false',this)">Direct Only</button>
+    </div>
+
+    <select class="select-pill" id="sortSelect" onchange="sortApplications()">
+      <option value="default">Sort: Default</option>
+      <option value="deadline">Sort: Deadline</option>
+      <option value="status">Sort: Status</option>
+      <option value="uni">Sort: University</option>
+      <option value="fee">Sort: Fee</option>
+    </select>
+  </div>
+
+  <div class="controls-right">
+    <button class="btn btn-primary" onclick="openModal()">+ Add Entry</button>
+  </div>
+</div>
+
+<!-- ─── MAIN CONTENT ──────────────────────────────────── -->
+<main class="main" id="main">
+  <div class="loader" id="globalLoader">
+    <div class="spinner"></div> Loading applications…
+  </div>
+</main>
+
+<!-- ─── FAB ───────────────────────────────────────────── -->
+<button class="fab" onclick="openModal()" title="Add new application">+</button>
+
+<!-- ─── ADD/EDIT MODAL ────────────────────────────────── -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modalTitle">Add New Application</div>
+        <div class="modal-subtitle" id="modalSubtitle">Fill in the details for your university application</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Country *</label>
+        <select class="form-select" id="fCountry">
+          <option value="Germany">🇩🇪 Germany</option>
+          <option value="Austria">🇦🇹 Austria</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Institution Type</label>
+        <select class="form-select" id="fInstType">
+          <option value="Public">Public</option>
+          <option value="Private">Private</option>
+          <option value="Technical University">Technical University</option>
+          <option value="University of Applied Sciences">Univ. of Applied Sciences</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-group full">
+        <label class="form-label">University Name *</label>
+        <input type="text" class="form-input" id="fUniName" placeholder="e.g. Technical University of Munich" />
+      </div>
+
+      <div class="form-group full">
+        <label class="form-label">Course Name</label>
+        <input type="text" class="form-input" id="fCourseName" placeholder="e.g. M.Sc. Computer Science" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Application Start Date</label>
+        <input type="date" class="form-input" id="fStartDate" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Application Deadline</label>
+        <input type="date" class="form-input" id="fDeadline" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select class="form-select" id="fStatus">
+          <option value="Not Opened">Not Opened</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Submitted">Submitted</option>
+          <option value="Accepted">Accepted</option>
+          <option value="Rejected">Rejected</option>
+          <option value="Expired">Expired</option>
+          <option value="Withdrawn">Withdrawn</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Via Uni-Assist?</label>
+        <div class="toggle-group">
+          <span class="toggle-label" id="fAssistLabel">Direct Application</span>
+          <div class="toggle" id="fAssistToggle" onclick="toggleAssist()"></div>
+        </div>
+      </div>
+
+      <div class="form-group full">
+        <label class="form-label">Portal Link (Application Portal URL)</label>
+        <input type="url" class="form-input" id="fPortalLink" placeholder="https://..." />
+      </div>
+
+      <div class="form-group full">
+        <label class="form-label">Course Site Link</label>
+        <input type="url" class="form-input" id="fCourseSiteLink" placeholder="https://..." />
+      </div>
+
+      <div class="form-group full">
+        <label class="form-label">Other Related Links</label>
+        <input type="text" class="form-input" id="fOtherLinks" placeholder="Comma-separated links or descriptions" />
+      </div>
+
+      <div class="form-group full" id="feeGroup" style="display:none">
+        <label class="form-label">Application Fee (Auto: €30 via Uni-Assist)</label>
+        <input type="number" class="form-input" id="fFee" value="30" min="0" step="1" />
+      </div>
+
+      <div class="form-group full">
+        <label class="form-label">Steps / Notes / Comments</label>
+        <textarea class="form-textarea" id="fSteps" placeholder="Document progress, checklist items, notes..."></textarea>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitForm()">
+        <span id="submitBtnText">💾 Save Application</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── CONFIRM DELETE ─────────────────────────────────── -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-icon">🗑️</div>
+    <div class="confirm-title">Delete Application?</div>
+    <div class="confirm-msg" id="confirmMsg">This action cannot be undone.</div>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost" onclick="closeConfirm()">Cancel</button>
+      <button class="btn-confirm-delete" id="confirmDeleteBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── JAVASCRIPT ─────────────────────────────────────── -->
+<script>
+const API = 'http://localhost:3001/api';
+
+let allApplications = [];
+let activeFilters = { status: 'all', assist: 'all' };
+let editingId = null;
+let isAssistToggled = false;
+let dragSrcRow = null;
+let pendingDeleteId = null;
+
+// ─── INIT ──────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  checkConnection();
+  loadApplications();
+});
+
+async function checkConnection() {
+  try {
+    const r = await fetch(`${API}/applications`);
+    if (r.ok) setConnected(true);
+    else setConnected(false);
+  } catch { setConnected(false); }
+}
+
+function setConnected(ok, err = false) {
+  const badge = document.getElementById('connBadge');
+  const text = document.getElementById('connText');
+  badge.className = 'conn-badge ' + (ok ? 'connected' : err ? 'error' : '');
+  text.textContent = ok ? 'MongoDB Connected' : err ? 'Connection Failed' : 'Disconnected';
+}
+
+// ─── TOAST ────────────────────────────────────────
+function toast(msg, type = 'info', duration = 3200) {
+  const c = document.getElementById('toastContainer');
+  const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${icons[type]}</span><span>${msg}</span>`;
+  c.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(40px)'; t.style.transition = '0.3s'; setTimeout(() => t.remove(), 300); }, duration);
+}
+
+// ─── LOAD DATA ─────────────────────────────────────
+async function loadApplications() {
+  const main = document.getElementById('main');
+  main.innerHTML = '<div class="loader"><div class="spinner"></div> Loading applications…</div>';
+  try {
+    const r = await fetch(`${API}/applications`);
+    const j = await r.json();
+    if (j.success) {
+      allApplications = j.data;
+      setConnected(true);
+      renderDashboard();
+      updateStats();
+    } else throw new Error(j.message);
+  } catch (err) {
+    setConnected(false, true);
+    main.innerHTML = `
+      <div class="empty-state" style="padding:80px 24px">
+        <div class="empty-icon">⚠️</div>
+        <div class="empty-title">Cannot connect to backend</div>
+        <div class="empty-sub" style="max-width:400px;margin:0 auto;line-height:1.7">
+          Make sure your server is running on <strong style="color:var(--blue-glow)">localhost:3001</strong><br>
+          Run: <code style="background:var(--bg-elevated);padding:2px 8px;border-radius:4px;color:var(--text-accent)">npm start</code> in the project folder
+        </div>
+      </div>`;
+    toast('Cannot connect to backend. See setup guide.', 'error');
+  }
+}
+
+// ─── RENDER DASHBOARD ──────────────────────────────
+function renderDashboard() {
+  const main = document.getElementById('main');
+  main.innerHTML = '';
+
+  const filtered = getFiltered();
+  const germany = filtered.filter(a => a.country === 'Germany');
+  const austria = filtered.filter(a => a.country === 'Austria');
+
+  const countries = [
+    { name: 'Germany', flag: '🇩🇪', apps: germany },
+    { name: 'Austria', flag: '🇦🇹', apps: austria }
+  ];
+
+  countries.forEach(({ name, flag, apps }) => {
+    const sec = document.createElement('div');
+    sec.className = 'country-section';
+    sec.id = `section-${name}`;
+    sec.innerHTML = `
+      <div class="country-header">
+        <span class="country-flag">${flag}</span>
+        <h2 class="country-title">${name}</h2>
+        <span class="country-count" id="count-${name}">${apps.length} application${apps.length !== 1 ? 's' : ''}</span>
+        <div class="country-divider"></div>
+        <button class="btn btn-primary" onclick="openModal('${name}')" style="font-size:12px;padding:6px 14px">+ Add to ${name}</button>
+      </div>
+      <div class="table-wrapper">
+        <div class="table-scroll">
+          ${apps.length === 0 ? renderEmpty(name) : renderTable(apps, name)}
+        </div>
+      </div>`;
+    main.appendChild(sec);
+  });
+
+  initDragAndDrop();
+}
+
+function renderEmpty(country) {
+  return `<div class="empty-state">
+    <div class="empty-icon">📋</div>
+    <div class="empty-title">No applications for ${country}</div>
+    <div class="empty-sub">Click "+ Add to ${country}" or the ＋ button to add one</div>
+  </div>`;
+}
+
+function renderTable(apps, country) {
+  const rows = apps.map(app => renderRow(app)).join('');
+  return `<table id="table-${country}">
+    <thead>
+      <tr>
+        <th style="width:32px"></th>
+        <th class="resizable"><div class="th-inner">University</div></th>
+        <th class="resizable"><div class="th-inner">Course</div></th>
+        <th><div class="th-inner">Start Date</div></th>
+        <th><div class="th-inner">Deadline</div></th>
+        <th><div class="th-inner">Status</div></th>
+        <th><div class="th-inner">Type</div></th>
+        <th><div class="th-inner">Uni-Assist</div></th>
+        <th><div class="th-inner">Fee</div></th>
+        <th class="resizable"><div class="th-inner">Portal</div></th>
+        <th class="resizable"><div class="th-inner">Course Site</div></th>
+        <th class="resizable"><div class="th-inner">Other Links</div></th>
+        <th class="resizable"><div class="th-inner">Steps / Notes</div></th>
+        <th style="width:60px"><div class="th-inner">Actions</div></th>
+      </tr>
+    </thead>
+    <tbody id="tbody-${country}">
+      ${rows}
+    </tbody>
+  </table>`;
+}
+
+function renderRow(app) {
+  const statusKey = (app.status || 'Not Opened').toLowerCase().replace(' ', '-');
+  const statusDot = `<span class="status-dot ${statusKey}"></span>`;
+  const deadlineClass = getDeadlineClass(app.applicationDeadline);
+
+  return `<tr data-id="${app._id}" data-country="${app.country}" draggable="true">
+    <td><span class="drag-handle">⠿</span></td>
+    <td class="editable" onclick="editCell(this,'text','universityName','${app._id}')">
+      <strong style="color:var(--white)">${escHtml(app.universityName)}</strong>
+      <span class="edit-hint">✏ click to edit</span>
+    </td>
+    <td class="editable" onclick="editCell(this,'text','courseName','${app._id}')">
+      ${escHtml(app.courseName) || '<span style="color:var(--text-muted);font-style:italic">—</span>'}
+      <span class="edit-hint">✏ click to edit</span>
+    </td>
+    <td class="date-cell">${formatDate(app.applicationStartDate) || '—'}</td>
+    <td class="date-cell ${deadlineClass}">${formatDate(app.applicationDeadline) || '—'}</td>
+    <td class="editable" onclick="editCell(this,'status','status','${app._id}')">
+      <span class="status-badge ${statusKey}">${statusDot}${app.status}</span>
+      <span class="edit-hint">✏ click to edit</span>
+    </td>
+    <td>
+      <span class="tag ${getInstTag(app.institutionType)}">${app.institutionType || 'Public'}</span>
+    </td>
+    <td class="editable" onclick="editCell(this,'assist','isUniAssist','${app._id}')">
+      <span class="assist-badge ${app.isUniAssist ? 'assist-yes' : 'assist-no'}">
+        ${app.isUniAssist ? '✓ Uni-Assist' : '✕ Direct'}
+      </span>
+      <span class="edit-hint">✏ click to edit</span>
+    </td>
+    <td>
+      <span class="fee-badge ${app.isUniAssist ? 'fee-paid' : 'fee-free'}">
+        ${app.isUniAssist ? `€${app.applicationFee || 30}` : 'Free'}
+      </span>
+    </td>
+    <td class="link-cell">
+      ${renderLink(app.portalLink, 'Portal')}
+    </td>
+    <td class="link-cell">
+      ${renderLink(app.courseSiteLink, 'Course')}
+    </td>
+    <td class="link-cell">
+      ${renderLink(app.otherLinks, 'Link')}
+    </td>
+    <td style="min-width:160px;max-width:200px">
+      ${app.steps
+        ? `<div class="steps-preview-text" onclick="viewSteps('${app._id}')">${escHtml(app.steps)}</div>
+           <span class="steps-view-btn" onclick="viewSteps('${app._id}')">👁 View Full</span>`
+        : `<span style="color:var(--text-muted);font-style:italic;font-size:11px;cursor:pointer" onclick="openModal(null,'${app._id}')">Add notes…</span>`
+      }
+    </td>
+    <td>
+      <button class="btn btn-icon btn-ghost" onclick="openModal(null,'${app._id}')" title="Edit" style="margin-bottom:4px">✏</button>
+      <button class="btn btn-icon btn-danger" onclick="confirmDelete('${app._id}','${escHtml(app.universityName)}')" title="Delete">🗑</button>
+    </td>
+  </tr>`;
+}
+
+function renderLink(url, label) {
+  if (!url || url.trim() === '') return `<span class="no-link">—</span>`;
+  const urls = url.split(',').map(u => u.trim()).filter(Boolean);
+  if (urls.length === 1) {
+    const href = urls[0].startsWith('http') ? urls[0] : 'https://' + urls[0];
+    return `<a href="${href}" target="_blank" rel="noopener">🔗 ${label}</a>`;
+  }
+  return urls.map((u, i) => {
+    const href = u.startsWith('http') ? u : 'https://' + u;
+    return `<a href="${href}" target="_blank" rel="noopener" style="display:block;margin-bottom:3px">🔗 Link ${i+1}</a>`;
+  }).join('');
+}
+
+// ─── INLINE CELL EDITING ───────────────────────────
+async function editCell(td, type, field, id) {
+  if (td.querySelector('input, select, textarea')) return; // already editing
+
+  const app = allApplications.find(a => a._id === id);
+  if (!app) return;
+
+  const current = app[field];
+  let input;
+
+  if (type === 'text') {
+    input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'cell-edit-input';
+    input.value = current || '';
+  } else if (type === 'status') {
+    input = document.createElement('select');
+    input.className = 'cell-select';
+    ['Not Opened','In Progress','Submitted','Accepted','Rejected','Expired','Withdrawn'].forEach(s => {
+      const o = document.createElement('option');
+      o.value = s; o.textContent = s;
+      if (s === current) o.selected = true;
+      input.appendChild(o);
+    });
+  } else if (type === 'assist') {
+    input = document.createElement('select');
+    input.className = 'cell-select';
+    [['true','✓ Uni-Assist'],['false','✕ Direct']].forEach(([v, l]) => {
+      const o = document.createElement('option');
+      o.value = v; o.textContent = l;
+      if (v === String(current)) o.selected = true;
+      input.appendChild(o);
+    });
+  } else if (type === 'textarea') {
+    input = document.createElement('textarea');
+    input.className = 'cell-textarea';
+    input.value = current || '';
+  }
+
+  // Save original for restore on cancel
+  const origHTML = td.innerHTML;
+
+  td.innerHTML = '';
+  td.appendChild(input);
+  input.focus();
+  if (input.select) input.select();
+
+  async function save() {
+    let val = input.value;
+    if (type === 'assist') val = val === 'true';
+
+    const update = { [field]: val };
+    if (field === 'isUniAssist') update.applicationFee = val ? 30 : 0;
+
+    try {
+      const r = await fetch(`${API}/applications/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(update)
+      });
+      const j = await r.json();
+      if (j.success) {
+        const idx = allApplications.findIndex(a => a._id === id);
+        if (idx !== -1) allApplications[idx] = j.data;
+        toast('Saved ✓', 'success', 1800);
+        renderDashboard();
+        updateStats();
+      } else throw new Error(j.message);
+    } catch (err) {
+      toast('Save failed: ' + err.message, 'error');
+      td.innerHTML = origHTML;
+    }
+  }
+
+  input.addEventListener('blur', save);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && type !== 'textarea') { e.preventDefault(); save(); }
+    if (e.key === 'Escape') { td.innerHTML = origHTML; }
+  });
+}
+
+// ─── FILTERS ──────────────────────────────────────
+function setFilter(key, value, btn) {
+  activeFilters[key] = value;
+  const group = key === 'status' ? 'statusFilter' : 'assistFilter';
+  document.querySelectorAll(`#${group} .filter-btn`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderDashboard();
+  updateStats();
+}
+
+function getFiltered() {
+  let apps = [...allApplications];
+  const sort = document.getElementById('sortSelect').value;
+
+  if (activeFilters.status !== 'all') apps = apps.filter(a => a.status === activeFilters.status);
+  if (activeFilters.assist !== 'all') apps = apps.filter(a => String(a.isUniAssist) === activeFilters.assist);
+
+  if (sort === 'deadline') apps.sort((a, b) => (a.applicationDeadline || '').localeCompare(b.applicationDeadline || ''));
+  else if (sort === 'status') apps.sort((a, b) => (a.status || '').localeCompare(b.status || ''));
+  else if (sort === 'uni') apps.sort((a, b) => (a.universityName || '').localeCompare(b.universityName || ''));
+  else if (sort === 'fee') apps.sort((a, b) => (b.applicationFee || 0) - (a.applicationFee || 0));
+  else apps.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+  return apps;
+}
+
+function sortApplications() { renderDashboard(); }
+
+// ─── STATS ────────────────────────────────────────
+function updateStats() {
+  const a = allApplications;
+  document.getElementById('statTotal').textContent = a.length;
+  document.getElementById('statInProgress').textContent = a.filter(x => x.status === 'In Progress').length;
+  document.getElementById('statSubmitted').textContent = a.filter(x => x.status === 'Submitted').length;
+  document.getElementById('statAccepted').textContent = a.filter(x => x.status === 'Accepted').length;
+  document.getElementById('statRejected').textContent = a.filter(x => x.status === 'Rejected').length;
+  const fees = a.filter(x => x.isUniAssist).reduce((s, x) => s + (x.applicationFee || 30), 0);
+  document.getElementById('statFee').textContent = fees > 0 ? `€${fees}` : '€0';
+}
+
+// ─── MODAL ────────────────────────────────────────
+function openModal(country = null, id = null) {
+  editingId = id;
+  isAssistToggled = false;
+
+  const overlay = document.getElementById('modalOverlay');
+  const title = document.getElementById('modalTitle');
+  const subtitle = document.getElementById('modalSubtitle');
+  const submitBtn = document.getElementById('submitBtnText');
+
+  if (id) {
+    const app = allApplications.find(a => a._id === id);
+    if (!app) return;
+    title.textContent = 'Edit Application';
+    subtitle.textContent = app.universityName;
+    submitBtn.textContent = '💾 Update Application';
+
+    document.getElementById('fCountry').value = app.country;
+    document.getElementById('fInstType').value = app.institutionType || 'Public';
+    document.getElementById('fUniName').value = app.universityName || '';
+    document.getElementById('fCourseName').value = app.courseName || '';
+    document.getElementById('fStartDate').value = app.applicationStartDate || '';
+    document.getElementById('fDeadline').value = app.applicationDeadline || '';
+    document.getElementById('fStatus').value = app.status || 'Not Opened';
+    document.getElementById('fPortalLink').value = app.portalLink || '';
+    document.getElementById('fCourseSiteLink').value = app.courseSiteLink || '';
+    document.getElementById('fOtherLinks').value = app.otherLinks || '';
+    document.getElementById('fSteps').value = app.steps || '';
+    document.getElementById('fFee').value = app.applicationFee || 30;
+
+    isAssistToggled = app.isUniAssist;
+    updateAssistToggleUI();
+  } else {
+    title.textContent = 'Add New Application';
+    subtitle.textContent = country ? `Adding to ${country}` : 'Choose a country below';
+    submitBtn.textContent = '💾 Save Application';
+
+    // Reset form
+    document.getElementById('fCountry').value = country || 'Germany';
+    document.getElementById('fInstType').value = 'Public';
+    document.getElementById('fUniName').value = '';
+    document.getElementById('fCourseName').value = '';
+    document.getElementById('fStartDate').value = '';
+    document.getElementById('fDeadline').value = '';
+    document.getElementById('fStatus').value = 'Not Opened';
+    document.getElementById('fPortalLink').value = '';
+    document.getElementById('fCourseSiteLink').value = '';
+    document.getElementById('fOtherLinks').value = '';
+    document.getElementById('fSteps').value = '';
+    document.getElementById('fFee').value = '30';
+    isAssistToggled = false;
+    updateAssistToggleUI();
+  }
+
+  overlay.classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  editingId = null;
+}
+
+function toggleAssist() {
+  isAssistToggled = !isAssistToggled;
+  updateAssistToggleUI();
+}
+
+function updateAssistToggleUI() {
+  const toggle = document.getElementById('fAssistToggle');
+  const label = document.getElementById('fAssistLabel');
+  const feeGroup = document.getElementById('feeGroup');
+
+  toggle.className = 'toggle' + (isAssistToggled ? ' on' : '');
+  label.textContent = isAssistToggled ? 'Via Uni-Assist' : 'Direct Application';
+  feeGroup.style.display = isAssistToggled ? 'flex' : 'none';
+}
+
+async function submitForm() {
+  const uniName = document.getElementById('fUniName').value.trim();
+  if (!uniName) { toast('University name is required', 'error'); return; }
+
+  const payload = {
+    country:              document.getElementById('fCountry').value,
+    institutionType:      document.getElementById('fInstType').value,
+    universityName:       uniName,
+    courseName:           document.getElementById('fCourseName').value.trim(),
+    applicationStartDate: document.getElementById('fStartDate').value,
+    applicationDeadline:  document.getElementById('fDeadline').value,
+    status:               document.getElementById('fStatus').value,
+    portalLink:           document.getElementById('fPortalLink').value.trim(),
+    courseSiteLink:       document.getElementById('fCourseSiteLink').value.trim(),
+    otherLinks:           document.getElementById('fOtherLinks').value.trim(),
+    steps:                document.getElementById('fSteps').value.trim(),
+    isUniAssist:          isAssistToggled,
+    applicationFee:       isAssistToggled ? Number(document.getElementById('fFee').value) : 0
+  };
+
+  try {
+    let r, j;
+    if (editingId) {
+      r = await fetch(`${API}/applications/${editingId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } else {
+      r = await fetch(`${API}/applications`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    }
+    j = await r.json();
+    if (j.success) {
+      toast(editingId ? 'Application updated!' : 'Application added!', 'success');
+      closeModal();
+      await loadApplications();
+    } else throw new Error(j.message);
+  } catch (err) {
+    toast('Error: ' + err.message, 'error');
+  }
+}
+
+// Save all = just refresh from DB (data is auto-saved on edit)
+async function saveAll() {
+  toast('All changes are auto-saved to MongoDB ✓', 'success');
+  await loadApplications();
+}
+
+// ─── DELETE ───────────────────────────────────────
+function confirmDelete(id, name) {
+  pendingDeleteId = id;
+  document.getElementById('confirmMsg').textContent = `Delete "${name}"? This action cannot be undone.`;
+  const overlay = document.getElementById('confirmOverlay');
+  overlay.classList.add('open');
+  document.getElementById('confirmDeleteBtn').onclick = async () => {
+    await deleteApplication(pendingDeleteId);
+    closeConfirm();
+  };
+}
+
+function closeConfirm() {
+  document.getElementById('confirmOverlay').classList.remove('open');
+  pendingDeleteId = null;
+}
+
+async function deleteApplication(id) {
+  try {
+    const r = await fetch(`${API}/applications/${id}`, { method: 'DELETE' });
+    const j = await r.json();
+    if (j.success) {
+      toast('Application deleted', 'info');
+      allApplications = allApplications.filter(a => a._id !== id);
+      renderDashboard();
+      updateStats();
+    } else throw new Error(j.message);
+  } catch (err) {
+    toast('Delete failed: ' + err.message, 'error');
+  }
+}
+
+// ─── DRAG & DROP (row reorder) ─────────────────────
+function initDragAndDrop() {
+  document.querySelectorAll('tbody[id^="tbody-"]').forEach(tbody => {
+    tbody.querySelectorAll('tr').forEach(row => {
+      row.addEventListener('dragstart', handleDragStart);
+      row.addEventListener('dragover', handleDragOver);
+      row.addEventListener('drop', handleDrop);
+      row.addEventListener('dragend', handleDragEnd);
+      row.addEventListener('dragleave', handleDragLeave);
+    });
+  });
+}
+
+function handleDragStart(e) {
+  dragSrcRow = this;
+  this.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', this.dataset.id);
+}
+
+function handleDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  this.classList.add('drag-over');
+}
+
+function handleDragLeave() { this.classList.remove('drag-over'); }
+
+function handleDragEnd() {
+  this.classList.remove('dragging');
+  document.querySelectorAll('tr').forEach(r => r.classList.remove('drag-over'));
+}
+
+async function handleDrop(e) {
+  e.preventDefault();
+  this.classList.remove('drag-over');
+  if (dragSrcRow === this) return;
+  if (dragSrcRow.dataset.country !== this.dataset.country) {
+    toast('Can only reorder within the same country section', 'error'); return;
+  }
+
+  const tbody = this.closest('tbody');
+  const rows = [...tbody.querySelectorAll('tr')];
+  const srcIdx = rows.indexOf(dragSrcRow);
+  const dstIdx = rows.indexOf(this);
+
+  if (srcIdx < dstIdx) tbody.insertBefore(dragSrcRow, this.nextSibling);
+  else tbody.insertBefore(dragSrcRow, this);
+
+  // Update order in DB
+  const newRows = [...tbody.querySelectorAll('tr')];
+  const orders = newRows.map((r, i) => ({ id: r.dataset.id, order: i }));
+
+  try {
+    await fetch(`${API}/applications/reorder/bulk`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orders })
+    });
+    orders.forEach(({ id, order }) => {
+      const a = allApplications.find(x => x._id === id);
+      if (a) a.order = order;
+    });
+  } catch { toast('Reorder save failed', 'error'); }
+}
+
+</script>
+<!-- ─── STEPS PREVIEW MODAL ────────────────────────── -->
+<div class="steps-modal-overlay" id="stepsModalOverlay">
+  <div class="steps-modal">
+    <div class="steps-modal-header">
+      <div>
+        <div class="steps-modal-uni" id="stepsModalUni">—</div>
+        <div class="steps-modal-course" id="stepsModalCourse">Steps & Notes</div>
+      </div>
+      <button class="modal-close" onclick="closeStepsModal()">✕</button>
+    </div>
+    <div class="steps-modal-body">
+      <div class="steps-modal-content" id="stepsModalContent"></div>
+    </div>
+    <div class="steps-modal-footer">
+      <button class="btn btn-ghost" onclick="closeStepsModal()">Close</button>
+      <button class="btn btn-primary" id="stepsEditBtn">✏ Edit</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── HELPERS ──────────────────────────────────────
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function formatDate(d) {
+  if (!d) return '';
+  try {
+    const dt = new Date(d);
+    if (isNaN(dt)) return d;
+    return dt.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+  } catch { return d; }
+}
+
+function getDeadlineClass(deadline) {
+  if (!deadline) return '';
+  const today = new Date();
+  const dl = new Date(deadline);
+  if (isNaN(dl)) return '';
+  const days = (dl - today) / (1000 * 60 * 60 * 24);
+  if (days < 0) return 'date-expired';
+  if (days < 14) return 'date-soon';
+  return '';
+}
+
+function getInstTag(type) {
+  if (!type) return 'tag-public';
+  if (type === 'Private') return 'tag-private';
+  if (type.includes('Technical')) return 'tag-tech';
+  if (type.includes('Applied')) return 'tag-applied';
+  return 'tag-public';
+}
+
+// Close modals on overlay click
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+document.getElementById('confirmOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeConfirm();
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeModal(); closeConfirm(); closeStepsModal(); }
+  if (e.key === 'n' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); openModal(); }
+});
+
+// ─── STEPS PREVIEW MODAL ──────────────────────────
+function viewSteps(id) {
+  const app = allApplications.find(a => a._id === id);
+  if (!app) return;
+  document.getElementById('stepsModalUni').textContent = app.universityName;
+  document.getElementById('stepsModalCourse').textContent = app.courseName || 'Steps & Notes';
+  document.getElementById('stepsModalContent').textContent = app.steps || '';
+  document.getElementById('stepsEditBtn').onclick = () => { closeStepsModal(); openModal(null, id); };
+  document.getElementById('stepsModalOverlay').classList.add('open');
+  document.getElementById('stepsModalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeStepsModal();
+});
+}
+
+function closeStepsModal() {
+  document.getElementById('stepsModalOverlay').classList.remove('open');
+}
+</script>
+</body>
+</html>
