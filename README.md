@@ -1,4 +1,4 @@
-# 🎓 UniTrack — University Application Dashboard
+# UniTrack — University Application Dashboard
 
 <div align="center">
 
@@ -14,7 +14,7 @@ A modern, full-stack application dashboard for tracking university applications 
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Overview](#-overview)
 - [Features](#-features)
@@ -33,7 +33,7 @@ A modern, full-stack application dashboard for tracking university applications 
 
 ---
 
-## 🌟 Overview
+## Overview
 
 UniTrack is a comprehensive application tracking system designed specifically for students applying to universities in Germany and Austria. The dashboard provides a centralized platform to manage application deadlines, track submission status, organize application requirements, and monitor progress across multiple institutions.
 
@@ -47,67 +47,67 @@ UniTrack is a comprehensive application tracking system designed specifically fo
 
 ---
 
-## ✨ Features
+## Features
 
 ### Core Functionality
 
-- **📊 Dashboard Overview**
+- ** Dashboard Overview**
   - Real-time statistics (Total, In Progress, Submitted, Accepted, Rejected)
   - Country-based application grouping (Germany & Austria)
   - Visual status indicators with color-coded badges
 
-- **📝 Application Management**
+- ** Application Management**
   - Create, read, update, and delete applications
   - Inline cell editing for quick updates
   - Full edit modal for comprehensive changes
   - Bulk reordering via drag-and-drop
 
-- **🔍 Filtering & Sorting**
+- ** Filtering & Sorting**
   - Filter by application status (Not Opened, In Progress, Submitted, Accepted, Rejected, Expired, Withdrawn)
   - Filter by Uni-Assist applications
   - Sort by various criteria
 
-- **📅 Deadline Tracking**
+- ** Deadline Tracking**
   - Application start date and deadline management
   - Visual deadline warnings (yellow: within 14 days, red: expired)
   - Date formatting and display
 
-- **🔗 Link Management**
+- ** Link Management**
   - Portal links for application portals
   - Course site links
   - Additional resource links
 
-- **💰 Fee Tracking**
+- ** Fee Tracking**
   - Application fee management
   - Uni-Assist fee defaults (€30)
   - Direct application fee tracking
 
-- **📋 Application Steps**
+- ** Application Steps**
   - Customizable application step tracking
   - Multi-line text support for detailed requirements
   - Preview modal for extended content
 
 ### User Experience
 
-- **🎨 Modern UI**
+- ** Modern UI**
   - Dark theme with professional color scheme
   - Responsive design for desktop and mobile
   - Smooth animations and transitions
   - Custom scrollbars and visual feedback
 
-- **⌨️ Keyboard Shortcuts**
+- ** Keyboard Shortcuts**
   - `Ctrl/Cmd + N`: Open Add Application modal
   - `Escape`: Close modals
   - `Enter`: Save inline edits
 
-- **🔄 Auto-Save**
+- ** Auto-Save**
   - Automatic saving on cell edit completion
   - Manual "Save All" button for bulk operations
   - Connection status indicator
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 | Layer | Technology | Version |
 |-------|------------|---------|
@@ -120,7 +120,7 @@ UniTrack is a comprehensive application tracking system designed specifically fo
 
 ---
 
-## 📦 Prerequisites
+## Prerequisites
 
 Before installing UniTrack, ensure you have the following installed:
 
@@ -137,12 +137,12 @@ Before installing UniTrack, ensure you have the following installed:
 
 ---
 
-## 🚀 Installation
+## Installation
 
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/uni-application-tracker.git
+git clone https://github.com/bhattjee/uni-application-tracker.git
 cd uni-application-tracker
 ```
 
@@ -171,7 +171,7 @@ brew services start mongodb-community
 # Open Services → Start "MongoDB"
 
 # Option 2: Command line
-"C:\Program Files\MongoDB\Server\7.0\bin\mongod.exe" --dbpath="C:\data\db"
+"<path>mongod.exe" --dbpath="C:\data\db"
 ```
 
 **On Linux (Ubuntu/Debian):**
@@ -208,9 +208,9 @@ npm run dev
 
 You should see:
 ```
-✅ Connected to MongoDB at mongodb://127.0.0.1:27017/uni_tracker
-🚀 Server running at http://localhost:3001
-📊 Dashboard: http://localhost:3001
+Connected to MongoDB at mongodb://127.0.0.1:27017/uni_tracker
+Server running at http://localhost:3001
+Dashboard: http://localhost:3001
 ```
 
 ### Step 6: Access the Dashboard
@@ -378,7 +378,7 @@ POST /api/applications
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 uni-application-tracker/
@@ -402,7 +402,7 @@ uni-application-tracker/
 
 ---
 
-## 🔧 Development
+## Development
 
 ### Running in Development Mode
 
@@ -428,7 +428,7 @@ Uses `nodemon` for automatic server restart on file changes.
 
 ---
 
-## 🔒 Security
+## Security
 
 ### Current Security Practices
 
@@ -460,7 +460,7 @@ NODE_ENV=production
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -515,7 +515,7 @@ export PATH=~/.npm-global/bin:$PATH
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please follow these guidelines:
 
@@ -546,7 +546,7 @@ When reporting bugs, please include:
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License.
 
@@ -576,7 +576,7 @@ SOFTWARE.
 
 ---
 
-## 📞 Support
+## Support
 
 For questions, issues, or suggestions:
 - Open an issue on GitHub
