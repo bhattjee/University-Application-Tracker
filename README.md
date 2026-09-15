@@ -51,56 +51,56 @@ UniTrack is a comprehensive application tracking system designed specifically fo
 
 ### Core Functionality
 
-- ** Dashboard Overview**
+- **Dashboard Overview**
   - Real-time statistics (Total, In Progress, Submitted, Accepted, Rejected)
   - Country-based application grouping (Germany & Austria)
   - Visual status indicators with color-coded badges
 
-- ** Application Management**
+- **Application Management**
   - Create, read, update, and delete applications
   - Inline cell editing for quick updates
   - Full edit modal for comprehensive changes
   - Bulk reordering via drag-and-drop
 
-- ** Filtering & Sorting**
+- **Filtering & Sorting**
   - Filter by application status (Not Opened, In Progress, Submitted, Accepted, Rejected, Expired, Withdrawn)
   - Filter by Uni-Assist applications
   - Sort by various criteria
 
-- ** Deadline Tracking**
+- **Deadline Tracking**
   - Application start date and deadline management
   - Visual deadline warnings (yellow: within 14 days, red: expired)
   - Date formatting and display
 
-- ** Link Management**
+- **Link Management**
   - Portal links for application portals
   - Course site links
   - Additional resource links
 
-- ** Fee Tracking**
+- **Fee Tracking**
   - Application fee management
   - Uni-Assist fee defaults (€30)
   - Direct application fee tracking
 
-- ** Application Steps**
+- **Application Steps**
   - Customizable application step tracking
   - Multi-line text support for detailed requirements
   - Preview modal for extended content
 
 ### User Experience
 
-- ** Modern UI**
+- **Modern UI**
   - Dark theme with professional color scheme
   - Responsive design for desktop and mobile
   - Smooth animations and transitions
   - Custom scrollbars and visual feedback
 
-- ** Keyboard Shortcuts**
+- **Keyboard Shortcuts**
   - `Ctrl/Cmd + N`: Open Add Application modal
   - `Escape`: Close modals
   - `Enter`: Save inline edits
 
-- ** Auto-Save**
+- **Auto-Save**
   - Automatic saving on cell edit completion
   - Manual "Save All" button for bulk operations
   - Connection status indicator
